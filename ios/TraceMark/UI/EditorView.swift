@@ -29,18 +29,16 @@ struct EditorView: View {
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
-            GeometryReader { proxy in
-                VStack(spacing: 10) {
-                    header
-                    EditorPreviewSection(model: model)
-                        .frame(maxHeight: .infinity)
-                        .padding(.horizontal, 14)
-                    controlPanel
-                        .frame(height: 330)
-                    exportBar
-                }
-                .padding(.top, proxy.safeAreaInsets.top + 4)
+            VStack(spacing: 10) {
+                header
+                EditorPreviewSection(model: model)
+                    .frame(maxHeight: .infinity)
+                    .padding(.horizontal, 14)
+                controlPanel
+                    .frame(height: 330)
+                exportBar
             }
+            .padding(.top, windowTopSafeInset + 4)
             .ignoresSafeArea(edges: .top)
 
             if model.exporting {
@@ -50,7 +48,7 @@ struct EditorView: View {
         .overlay(alignment: .top) {
             if let toast = model.toast {
                 ToastView(message: toast)
-                    .padding(.top, 64)
+                    .padding(.top, windowTopSafeInset + 8)
                     .transition(.move(edge: .top).combined(with: .opacity))
             }
         }
@@ -93,6 +91,17 @@ struct EditorView: View {
                 }
         }
         .padding(.horizontal, 16)
+    }
+
+    /// Full-screen covers can lay content out edge-to-edge, which puts the custom
+    /// header inside the status-bar region where the system intercepts taps.
+    /// Read the real window inset so the header always clears it.
+    private var windowTopSafeInset: CGFloat {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }?
+            .safeAreaInsets.top ?? 0
     }
 
     private var controlPanel: some View {

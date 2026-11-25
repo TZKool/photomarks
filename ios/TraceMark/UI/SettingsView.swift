@@ -14,7 +14,7 @@ struct SettingsView: View {
     private var settings: AppSettings { settingsStore.value }
 
     private var appVersion: String {
-        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.1"
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.2"
     }
 
     var body: some View {
