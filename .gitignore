@@ -1,0 +1,27 @@
+*.iml
+.gradle/
+/local.properties
+/.idea/
+.DS_Store
+/build/
+/app/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+*.psd
+work/
+.work/
+vibe_images/
+
+# iOS / Xcode
+ios/*.xcodeproj/
+ios/build/
+ios/*.ipa
+ios/xcodebuild.log
+ios/TraceMark/Info.plist
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcworkspace/xcuserdata/
