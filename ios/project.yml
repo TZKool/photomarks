@@ -18,7 +18,8 @@ targets:
     sources:
       - path: TraceMark
         excludes:
-          - "Info.plist"    settings:
+          - "Info.plist"
+    settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.tzkool.tracemark
         PRODUCT_NAME: TraceMark
