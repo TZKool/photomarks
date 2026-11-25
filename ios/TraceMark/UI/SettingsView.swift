@@ -408,7 +408,7 @@ struct SettingsView: View {
             HStack(spacing: 10) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(GoldGradient())
+                        .fill(GoldGradient.linear)
                     Image(systemName: "mappin.and.ellipse")
                         .font(.system(size: 15, weight: .bold))
                         .foregroundColor(.black)

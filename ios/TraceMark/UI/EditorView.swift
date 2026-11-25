@@ -809,7 +809,7 @@ private struct ExportSuccessSheet: View {
                             .frame(height: 46)
                             .background(
                                 RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                    .fill(GoldGradient())
+                                    .fill(GoldGradient.linear)
                             )
                     }
                     .buttonStyle(.plain)

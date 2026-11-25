@@ -51,12 +51,10 @@ struct AppBackground: View {
     }
 }
 
-struct GoldGradient: View {
-    var body: some View {
-        LinearGradient(
-            colors: [TMColor.goldSoft, TMColor.gold],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-    }
+enum GoldGradient {
+    static let linear = LinearGradient(
+        colors: [TMColor.goldSoft, TMColor.gold],
+        startPoint: .topLeading,
+        endPoint: .bottomTrailing
+    )
 }

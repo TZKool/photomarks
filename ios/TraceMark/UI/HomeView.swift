@@ -66,7 +66,7 @@ struct HomeView: View {
         HStack(spacing: 12) {
             ZStack {
                 RoundedRectangle(cornerRadius: 13, style: .continuous)
-                    .fill(GoldGradient())
+                    .fill(GoldGradient.linear)
                 Image(systemName: "mappin.and.ellipse")
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.black)
@@ -152,7 +152,7 @@ struct HomeView: View {
                 .frame(height: 54)
                 .background(
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .fill(GoldGradient())
+                        .fill(GoldGradient.linear)
                 )
                 .shadow(color: TMColor.gold.opacity(0.35), radius: 18, y: 8)
             }

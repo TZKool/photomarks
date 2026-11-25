@@ -1,5 +1,6 @@
 import AVFoundation
 import SwiftUI
+import UIKit
 
 // MARK: - Containers
 
@@ -25,7 +26,12 @@ struct SectionLabel: View {
 
 struct GlassCard<Content: View>: View {
     var padding: CGFloat = 16
-    @ViewBuilder var content: Content
+    private let content: Content
+
+    init(padding: CGFloat = 16, @ViewBuilder content: () -> Content) {
+        self.padding = padding
+        self.content = content()
+    }
 
     var body: some View {
         content
@@ -100,7 +106,7 @@ struct PrimaryActionButton: View {
             .frame(height: 52)
             .background(
                 RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(GoldGradient())
+                    .fill(GoldGradient.linear)
             )
             .opacity(enabled ? 1 : 0.4)
             .shadow(color: TMColor.gold.opacity(enabled ? 0.35 : 0), radius: 16, y: 8)
@@ -520,7 +526,7 @@ final class WatermarkCanvasView: UIView {
     var text: FormattedWatermark? {
         didSet { setNeedsDisplay() }
     }
-    var transform: WatermarkTransform = .identity {
+    var watermarkTransform: WatermarkTransform = .identity {
         didSet { setNeedsDisplay() }
     }
     var showsWatermark = true {
@@ -553,7 +559,7 @@ final class WatermarkCanvasView: UIView {
             canvasSize: canvasRect.size,
             template: template,
             text: text,
-            transform: transform
+            transform: watermarkTransform
         )
         ctx.restoreGState()
     }
@@ -571,7 +577,7 @@ struct WatermarkPreview: UIViewRepresentable {
         view.image = image
         view.template = template
         view.text = text
-        view.transform = transform
+        view.watermarkTransform = transform
         view.showsWatermark = showsWatermark
         return view
     }
@@ -580,7 +586,7 @@ struct WatermarkPreview: UIViewRepresentable {
         view.image = image
         view.template = template
         view.text = text
-        view.transform = transform
+        view.watermarkTransform = transform
         view.showsWatermark = showsWatermark
     }
 }

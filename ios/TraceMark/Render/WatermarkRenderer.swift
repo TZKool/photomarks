@@ -172,7 +172,7 @@ enum WatermarkRenderer {
         }
     }
 
-    private final class Painter {
+    private struct Painter {
         let base: CGFloat
         let style: TemplateStyle
         let fields: FieldConfig
