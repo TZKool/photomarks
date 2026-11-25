@@ -127,7 +127,7 @@ enum WatermarkRenderer {
         private(set) var height: CGFloat = 0
 
         func add(height: CGFloat, width: CGFloat, draw: @escaping (CGContext, CGFloat) -> Void) {
-            let top = height
+            let top = self.height
             draws.append { ctx in draw(ctx, top) }
             self.height += height
             self.width = max(self.width, width)
@@ -146,12 +146,17 @@ enum WatermarkRenderer {
         let font: UIFont
         let attributes: [NSAttributedString.Key: Any]
 
-        init(font: UIFont, color: UIColor, kern: CGFloat, shadow: Bool, shadowOffset: CGFloat) {
+        init(font: UIFont, color: UIColor, kern: CGFloat, shadow: Bool, shadowOffset: CGFloat, strokeWidth: CGFloat? = nil) {
             self.font = font
             var attrs: [NSAttributedString.Key: Any] = [
                 .font: font,
-                .foregroundColor: color,
             ]
+            if let strokeWidth {
+                attrs[.strokeColor] = color
+                attrs[.strokeWidth] = strokeWidth
+            } else {
+                attrs[.foregroundColor] = color
+            }
             if abs(kern) > 0.001 {
                 attrs[.kern] = kern
             }
@@ -215,7 +220,8 @@ enum WatermarkRenderer {
             bold: Bool = false,
             medium: Bool = false,
             condensed: Bool = false,
-            letterSpacing: CGFloat? = nil
+            letterSpacing: CGFloat? = nil,
+            strokeWidth: CGFloat? = nil
         ) -> TextStyle {
             let fontSize = max(1, fs(size))
             let font: UIFont
@@ -234,7 +240,8 @@ enum WatermarkRenderer {
                 color: color,
                 kern: kern,
                 shadow: style.shadow,
-                shadowOffset: base * 0.0022
+                shadowOffset: base * 0.0022,
+                strokeWidth: strokeWidth
             )
         }
 
@@ -479,7 +486,8 @@ enum WatermarkRenderer {
                     size: 0.070,
                     color: textColor.withAlphaByte(90),
                     bold: true,
-                    letterSpacing: 0.14
+                    letterSpacing: 0.14,
+                    strokeWidth: 2.3
                 )
                 let header = "现场拍照"
                 col.add(height: headerStyle.lineHeight, width: headerStyle.width(header)) { ctx, top in
