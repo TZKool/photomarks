@@ -8,6 +8,20 @@ struct PickedPhoto: Identifiable, @unchecked Sendable {
     let preview: UIImage
 }
 
+#if DEBUG
+extension PickedPhoto {
+    /// Used by the simulator UI-preview launch argument; opens the editor without the photo picker.
+    static var debugSample: PickedPhoto {
+        let image = SamplePhoto.image(width: 900, height: 1200)
+        return PickedPhoto(
+            data: image.jpegData(compressionQuality: 0.9) ?? Data(),
+            meta: PhotoMeta(latitude: nil, longitude: nil, altitude: nil),
+            preview: image
+        )
+    }
+}
+#endif
+
 struct AccentPreset: Identifiable {
     let name: String
     let argb: Int

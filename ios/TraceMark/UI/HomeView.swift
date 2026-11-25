@@ -47,6 +47,13 @@ struct HomeView: View {
         .fullScreenCover(item: $editorPhoto) { photo in
             EditorView(photo: photo, settingsStore: settingsStore, templateStore: templateStore)
         }
+        .onAppear {
+            #if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-traceMarkDebugEditor"), editorPhoto == nil {
+                editorPhoto = .debugSample
+            }
+            #endif
+        }
         .onChange(of: pickerItem) { _ in
             Task { await loadPickedPhoto() }
         }

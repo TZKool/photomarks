@@ -1,0 +1,62 @@
+name: iOS UI Preview
+
+on:
+  workflow_dispatch:
+
+jobs:
+  screenshots:
+    name: Capture simulator screenshots
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: ios
+        run: xcodegen generate
+
+      - name: Build for simulator
+        working-directory: ios
+        run: |
+          xcodebuild \
+            -project TraceMark.xcodeproj \
+            -scheme TraceMark \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build-sim \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Boot simulator and capture screens
+        working-directory: ios
+        run: |
+          UDID=$(xcrun simctl list devices available -j | jq -r '.devices[][] | select(.name | startswith("iPhone")) | .udid' | head -1)
+          echo "Using simulator $UDID"
+          xcrun simctl boot "$UDID" 2>/dev/null || true
+          xcrun simctl bootstatus "$UDID" -b
+          APP="build-sim/Build/Products/Debug-iphonesimulator/TraceMark.app"
+          xcrun simctl install "$UDID" "$APP"
+          mkdir -p ui-preview
+          xcrun simctl launch "$UDID" com.tzkool.tracemark
+          sleep 4
+          xcrun simctl io "$UDID" screenshot ui-preview/home.png
+          xcrun simctl terminate "$UDID" com.tzkool.tracemark
+          xcrun simctl launch "$UDID" com.tzkool.tracemark -traceMarkDebugEditor
+          sleep 6
+          xcrun simctl io "$UDID" screenshot ui-preview/editor.png
+          xcrun simctl terminate "$UDID" com.tzkool.tracemark
+          ls -la ui-preview
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-ui-preview
+          path: ios/ui-preview
+          if-no-files-found: warn
+          retention-days: 7
