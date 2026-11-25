@@ -18,8 +18,7 @@ targets:
     sources:
       - path: TraceMark
         excludes:
-          - "Info.plist"
-    settings:
+          - "Info.plist"    settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.tzkool.tracemark
         PRODUCT_NAME: TraceMark
@@ -48,6 +47,19 @@ targets:
         LSSupportsOpeningDocumentsInPlace: true
         UIFileSharingEnabled: true
         UIApplicationSupportsIndirectInputEvents: true
+  TraceMarkTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: TraceMarkTests
+    dependencies:
+      - target: TraceMark
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tzkool.tracemark.tests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/TraceMark.app/TraceMark"
+        BUNDLE_LOADER: "$(TEST_HOST)"
 schemes:
   TraceMark:
     build:
@@ -55,5 +67,9 @@ schemes:
         TraceMark: all
     run:
       config: Debug
+    test:
+      config: Debug
+      targets:
+        - TraceMarkTests
     archive:
       config: Release
