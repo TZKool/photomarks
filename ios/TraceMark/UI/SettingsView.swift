@@ -13,6 +13,10 @@ struct SettingsView: View {
 
     private var settings: AppSettings { settingsStore.value }
 
+    private var appVersion: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0.1"
+    }
+
     var body: some View {
         ZStack {
             AppBackground()
@@ -418,7 +422,7 @@ struct SettingsView: View {
                     Text("迹印相机")
                         .font(.system(size: 14, weight: .bold))
                         .foregroundColor(TMColor.textPrimary)
-                    Text("TraceMark 1.0.0 · iOS 16+")
+                    Text("TraceMark \(appVersion) · iOS 16+")
                         .font(.system(size: 10))
                         .foregroundColor(TMColor.textTertiary)
                 }

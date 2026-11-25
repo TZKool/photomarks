@@ -62,6 +62,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tracemark.watermark.AppContainer
+import com.tracemark.watermark.BuildConfig
 import com.tracemark.watermark.geo.GeoProviderRegistry
 import com.tracemark.watermark.model.AddressLevel
 import com.tracemark.watermark.model.CoordinateSystem
@@ -364,7 +365,11 @@ fun SettingsScreen(container: AppContainer, onBack: () -> Unit) {
                 SectionLabel("关于")
                 GlassCard {
                     Column {
-                        Text("迹印相机 v1.0.0", style = MaterialTheme.typography.titleMedium, color = Color.White)
+                        Text(
+                            "迹印相机 v${BuildConfig.VERSION_NAME}",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = Color.White
+                        )
                         Spacer(Modifier.height(6.dp))
                         Text(
                             "读取照片 EXIF 中的拍摄时间、设备与 GPS，将经纬度与逆解析地址绘制为可拖拽的水印。\n\n" +

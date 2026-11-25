@@ -1,6 +1,11 @@
 import SwiftUI
 import UIKit
 
+private struct EditorHeaderTopKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) { value = nextValue() }
+}
+
 enum EditorTab: String, CaseIterable, Identifiable {
     case template = "模板"
     case style = "样式"
@@ -17,6 +22,7 @@ struct EditorView: View {
     @State private var tab: EditorTab = .template
     @State private var showSaveDialog = false
     @State private var templateName = ""
+    @State private var headerTopCorrection: CGFloat = 0
 
     init(photo: PickedPhoto, settingsStore: SettingsStore, templateStore: TemplateStore) {
         _model = StateObject(wrappedValue: EditorModel(
@@ -38,7 +44,6 @@ struct EditorView: View {
                     .frame(height: 330)
                 exportBar
             }
-            .padding(.top, 4)
 
             if model.exporting {
                 LoadingOverlay(text: "正在导出高清原图…")
@@ -90,6 +95,30 @@ struct EditorView: View {
                 }
         }
         .padding(.horizontal, 16)
+        .padding(.top, 4 + headerTopCorrection)
+        .background(
+            GeometryReader { proxy in
+                Color.clear.preference(
+                    key: EditorHeaderTopKey.self,
+                    value: proxy.frame(in: .global).minY
+                )
+            }
+        )
+        .onPreferenceChange(EditorHeaderTopKey.self) { top in
+            let target = windowTopSafeInset + 4
+            guard top < target - 0.5 else { return }
+            headerTopCorrection += target - top
+        }
+    }
+
+    /// Full-screen covers on newer iOS releases can lay their content out edge-to-edge,
+    /// which puts a custom header under the status bar where taps never reach it.
+    private var windowTopSafeInset: CGFloat {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }?
+            .safeAreaInsets.top ?? 0
     }
 
     private var controlPanel: some View {

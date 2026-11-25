@@ -129,6 +129,8 @@ struct IconCircleButton: View {
                 .frame(width: size, height: size)
                 .background(Circle().fill(TMColor.chip.opacity(0.9)))
                 .overlay(Circle().strokeBorder(TMColor.hairline, lineWidth: 1))
+                .frame(width: max(size, 44), height: max(size, 44))
+                .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
     }
